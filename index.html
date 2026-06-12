@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Deploy Project Lab adalah website belajar deploy project web ke hosting untuk pemula yang ingin bekerja secara profesional." />
+    <title>Deploy Project Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body data-page="home">
+    <div id="appNav"></div>
+
+    <main>
+      <section class="hero-section" id="home">
+        <div class="container">
+          <div class="row align-items-center g-4 g-lg-5">
+            <div class="col-lg-6">
+              <div class="hero-content">
+                <span class="eyebrow"><i class="bi bi-stars"></i> Lanjutan HTML, CSS, JavaScript, PHP, Laravel, dan GitHub</span>
+                <h1>Belajar Deploy Project ke Hosting dari Nol</h1>
+                <p class="hero-copy">Pelajari cara membawa project dari laptop ke hosting profesional: domain, cPanel, database, phpMyAdmin, upload ZIP, koneksi PHP, konfigurasi Laravel, testing, debugging, backup, dan handover.</p>
+                <div class="d-flex flex-wrap gap-3">
+                  <a class="btn btn-primary btn-lg" href="materi.html">Mulai Belajar <i class="bi bi-arrow-right"></i></a>
+                  <a class="btn btn-soft btn-lg" href="editor.html"><i class="bi bi-terminal"></i> Coba Simulator</a>
+                </div>
+                <div class="hero-stats">
+                  <span><strong>20</strong> materi deploy bertahap</span>
+                  <span><strong>10</strong> latihan debugging hosting</span>
+                  <span><strong>100%</strong> ramah pemula</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="hero-visual">
+                <img src="assets/images/deploy-hosting-hero-blue.png" alt="Ilustrasi workflow deploy project ke hosting dari file ZIP, domain, database, phpMyAdmin, sampai website live" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block compact-section">
+        <div class="container">
+          <div class="section-heading centered-heading">
+            <span class="eyebrow">Kenapa belajar di sini?</span>
+            <h2>Deploy terasa ringan saat alurnya terlihat jelas</h2>
+          </div>
+          <div class="row g-3 g-lg-4">
+            <div class="col-md-4">
+              <article class="feature-card h-100">
+                <span class="feature-icon orange"><i class="bi bi-diagram-3"></i></span>
+                <h3>Alur hosting nyata</h3>
+                <p>Materi memakai workflow cPanel: domain, database, user, privilege, File Manager, phpMyAdmin, dan koneksi project.</p>
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="feature-card h-100">
+                <span class="feature-icon teal"><i class="bi bi-terminal"></i></span>
+                <h3>Latihan langsung</h3>
+                <p>Coba checklist deploy, konfigurasi koneksi, quiz, recall, debugging, dan mini project tanpa merusak project asli.</p>
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="feature-card h-100">
+                <span class="feature-icon blue"><i class="bi bi-graph-up-arrow"></i></span>
+                <h3>Progress tracker</h3>
+                <p>Materi selesai, skor quiz, recall, debugging, mini project, badge, dan dark mode tersimpan otomatis di browser.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block alt-section">
+        <div class="container">
+          <div class="section-heading centered-heading">
+            <span class="eyebrow">Pilih ruang belajar</span>
+            <h2>Setiap aktivitas punya halaman sendiri</h2>
+            <p>Buka materi saat ingin memahami konsep, lalu pindah ke ruang latihan untuk menguji kesiapan deploy project web.</p>
+          </div>
+          <div class="home-path-grid">
+            <a class="path-card" href="materi.html"><i class="bi bi-journal-code"></i><strong>Materi</strong><span>20 pelajaran bertahap</span></a>
+            <a class="path-card" href="quiz.html"><i class="bi bi-patch-question"></i><strong>Quiz</strong><span>Uji pemahaman dasar</span></a>
+            <a class="path-card" href="debugging.html"><i class="bi bi-bug"></i><strong>Debugging</strong><span>Baca error hosting</span></a>
+            <a class="path-card" href="recall.html"><i class="bi bi-arrow-repeat"></i><strong>Recall</strong><span>Latih ingatan konsep</span></a>
+            <a class="path-card" href="editor.html"><i class="bi bi-terminal"></i><strong>Simulator</strong><span>Simulasikan checklist deploy</span></a>
+            <a class="path-card" href="projects.html"><i class="bi bi-rocket-takeoff"></i><strong>Mini Project</strong><span>Deploy nyata bertahap</span></a>
+            <a class="path-card" href="progress.html"><i class="bi bi-graph-up-arrow"></i><strong>Progress</strong><span>Lihat perjalanan belajarmu</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="appFooter"></div>
+    <div id="appToast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/progress.js"></script>
+    <script src="assets/js/layout.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
