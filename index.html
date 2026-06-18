@@ -16,30 +16,44 @@
     <div id="appNav"></div>
 
     <main>
-      <section class="hero-section" id="home">
+      <section class="home-learning-hero" id="home">
         <div class="container">
-          <div class="row align-items-center g-4 g-lg-5">
-            <div class="col-lg-6">
-              <div class="hero-content">
-                <span class="eyebrow"><i class="bi bi-stars"></i> Lanjutan HTML, CSS, JavaScript, PHP, Laravel, dan GitHub</span>
-                <h1>Belajar Deploy Project ke Hosting dari Nol</h1>
-                <p class="hero-copy">Pelajari cara membawa project dari laptop ke hosting profesional: domain, cPanel, database, phpMyAdmin, upload ZIP, koneksi PHP, konfigurasi Laravel, testing, debugging, backup, dan handover.</p>
-                <div class="d-flex flex-wrap gap-3">
-                  <a class="btn btn-primary btn-lg" href="materi.html">Mulai Belajar <i class="bi bi-arrow-right"></i></a>
-                  <a class="btn btn-soft btn-lg" href="editor.html"><i class="bi bi-terminal"></i> Coba Simulator</a>
-                </div>
-                <div class="hero-stats">
-                  <span><strong>20</strong> materi deploy bertahap</span>
-                  <span><strong>10</strong> latihan debugging hosting</span>
-                  <span><strong>100%</strong> ramah pemula</span>
-                </div>
+          <div class="home-hero-grid">
+            <div class="home-hero-copy">
+              <span class="eyebrow"><i class="bi bi-compass"></i> Jalur belajar deploy untuk pemula</span>
+              <h1>Belajar deploy project dari nol sampai website benar-benar live</h1>
+              <p class="hero-copy">Pahami alur audit project, domain, cPanel, document root, database, upload ZIP, konfigurasi PHP/Laravel, testing, debugging, backup, dan handover.</p>
+              <div class="home-hero-actions">
+                <a class="btn btn-primary btn-lg" id="homeContinueLink" href="materi/peta-deploy.html">
+                  Mulai sesi sekarang <i class="bi bi-arrow-right"></i>
+                </a>
+                <a class="btn btn-soft btn-lg" href="#demo-interaktif">
+                  <i class="bi bi-play-circle"></i> Lihat demo dulu
+                </a>
               </div>
             </div>
-            <div class="col-lg-6">
-              <div class="hero-visual">
+
+            <aside class="home-session-panel" aria-label="Sesi belajar berikutnya">
+              <div class="session-visual">
                 <img src="assets/images/deploy-hosting-hero-blue.png" alt="Ilustrasi workflow deploy project ke hosting dari file ZIP, domain, database, phpMyAdmin, sampai website live" />
               </div>
-            </div>
+              <article class="session-card">
+                <span class="mini-label">Sesi berikutnya</span>
+                <h2 id="homeNextLessonTitle">Peta besar deploy project</h2>
+                <p id="homeNextLessonMeta">Peta dan Hosting Dasar - 8 menit</p>
+                <div class="session-progress-row">
+                  <span>Progress</span>
+                  <strong id="homeProgressPercent">0%</strong>
+                </div>
+                <div class="session-progress" aria-label="Progress belajar">
+                  <span id="homeProgressBar"></span>
+                </div>
+                <div class="session-stats">
+                  <span><strong id="homeCompletedCount">0/20</strong> materi selesai</span>
+                  <span><strong id="homeCurrentPhase">Peta dan Hosting Dasar</strong> fase aktif</span>
+                </div>
+              </article>
+            </aside>
           </div>
         </div>
       </section>
@@ -47,51 +61,46 @@
       <section class="section-block compact-section">
         <div class="container">
           <div class="section-heading centered-heading">
-            <span class="eyebrow">Kenapa belajar di sini?</span>
-            <h2>Deploy terasa ringan saat alurnya terlihat jelas</h2>
+            <span class="eyebrow">Cara belajar</span>
+            <h2>Lihat deploy sebagai alur kerja, bukan kumpulan menu cPanel</h2>
+            <p>Deploy lebih mudah dipahami saat kamu tahu urutan audit, domain, folder, database, konfigurasi, testing, dan backup.</p>
           </div>
-          <div class="row g-3 g-lg-4">
-            <div class="col-md-4">
-              <article class="feature-card h-100">
-                <span class="feature-icon orange"><i class="bi bi-diagram-3"></i></span>
-                <h3>Alur hosting nyata</h3>
-                <p>Materi memakai workflow cPanel: domain, database, user, privilege, File Manager, phpMyAdmin, dan koneksi project.</p>
-              </article>
-            </div>
-            <div class="col-md-4">
-              <article class="feature-card h-100">
-                <span class="feature-icon teal"><i class="bi bi-terminal"></i></span>
-                <h3>Latihan langsung</h3>
-                <p>Coba checklist deploy, konfigurasi koneksi, quiz, recall, debugging, dan mini project tanpa merusak project asli.</p>
-              </article>
-            </div>
-            <div class="col-md-4">
-              <article class="feature-card h-100">
-                <span class="feature-icon blue"><i class="bi bi-graph-up-arrow"></i></span>
-                <h3>Progress tracker</h3>
-                <p>Materi selesai, skor quiz, recall, debugging, mini project, badge, dan dark mode tersimpan otomatis di browser.</p>
-              </article>
+          <div class="starter-flow" id="starterFlow"></div>
+        </div>
+      </section>
+
+      <section class="section-block alt-section" id="demo-interaktif">
+        <div class="container">
+          <div class="section-heading centered-heading">
+            <span class="eyebrow">Demo interaktif</span>
+            <h2>Lihat checklist di kiri, lalu baca hasil yang harus dicek</h2>
+            <p>Pilih contoh deploy, pahami catatan pentingnya, lalu coba ulang di simulator atau hosting latihan.</p>
+          </div>
+          <div class="home-demo-shell">
+            <div class="demo-tabs" id="homeDemoTabs"></div>
+            <div class="demo-workbench">
+              <div id="homeDemoCode"></div>
+              <div class="demo-preview-panel">
+                <div class="preview-head">
+                  <span><i class="bi bi-terminal"></i> Preview hasil cek</span>
+                </div>
+                <iframe id="homeDemoPreview" title="Preview demo deploy"></iframe>
+                <div class="demo-explain" id="homeDemoExplain"></div>
+                <div class="demo-task" id="homeDemoTask"></div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section-block alt-section">
+      <section class="section-block">
         <div class="container">
           <div class="section-heading centered-heading">
-            <span class="eyebrow">Pilih ruang belajar</span>
-            <h2>Setiap aktivitas punya halaman sendiri</h2>
-            <p>Buka materi saat ingin memahami konsep, lalu pindah ke ruang latihan untuk menguji kesiapan deploy project web.</p>
+            <span class="eyebrow">Peta belajar</span>
+            <h2>Belajar deploy dibagi menjadi 4 fase yang jelas</h2>
+            <p>Mulai dari peta hosting, lanjut ke setup domain dan database, masuk ke konfigurasi live, lalu tutup dengan debug, backup, dan handover.</p>
           </div>
-          <div class="home-path-grid">
-            <a class="path-card" href="materi.html"><i class="bi bi-journal-code"></i><strong>Materi</strong><span>20 pelajaran bertahap</span></a>
-            <a class="path-card" href="quiz.html"><i class="bi bi-patch-question"></i><strong>Quiz</strong><span>Uji pemahaman dasar</span></a>
-            <a class="path-card" href="debugging.html"><i class="bi bi-bug"></i><strong>Debugging</strong><span>Baca error hosting</span></a>
-            <a class="path-card" href="recall.html"><i class="bi bi-arrow-repeat"></i><strong>Recall</strong><span>Latih ingatan konsep</span></a>
-            <a class="path-card" href="editor.html"><i class="bi bi-terminal"></i><strong>Simulator</strong><span>Simulasikan checklist deploy</span></a>
-            <a class="path-card" href="projects.html"><i class="bi bi-rocket-takeoff"></i><strong>Mini Project</strong><span>Deploy nyata bertahap</span></a>
-            <a class="path-card" href="progress.html"><i class="bi bi-graph-up-arrow"></i><strong>Progress</strong><span>Lihat perjalanan belajarmu</span></a>
-          </div>
+          <div class="phase-map" id="homePhaseMap"></div>
         </div>
       </section>
     </main>

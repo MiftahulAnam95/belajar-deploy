@@ -57,15 +57,14 @@ window.DeployLabLayout = (() => {
   };
 
   const renderFooter = () => {
-    const base = basePath();
     const target = document.getElementById("appFooter");
     if (!target) return;
     target.innerHTML = `
       <footer class="site-footer">
         <div class="container">
           <div class="d-flex flex-column flex-lg-row gap-2 justify-content-between">
-            <span>Deploy Project Lab - lanjutan belajar web development menuju deploy profesional.</span>
-            <span><a href="${base}materi.html">Materi</a> / <a href="${base}editor.html">Simulator</a> / <a href="${base}progress.html">Progress</a></span>
+            <span>Deploy Project Lab - project belajar deploy interaktif setelah web dasar.</span>
+            <span>Dibuat untuk membantu pemula memahami hosting langkah demi langkah.</span>
           </div>
         </div>
       </footer>

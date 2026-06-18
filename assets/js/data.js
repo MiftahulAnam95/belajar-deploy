@@ -1157,6 +1157,135 @@ Simpan backup di lokasi aman non-publik atau storage lokal terenkripsi.`
     { id: "handover-pro", title: "Handover Pro", icon: "bi-award-fill", check: (state) => state.completedLessons.length >= 20 && state.completedDebug.length >= 10 }
   ];
 
+  const learningPhases = [
+    {
+      id: "peta-hosting",
+      icon: "bi-map",
+      label: "Materi 01-05",
+      title: "Peta dan Hosting Dasar",
+      description: "Pahami alur deploy, domain, cPanel, audit project, dan struktur folder PHP/Laravel sebelum upload.",
+      outcome: "Kamu tahu project harus diletakkan di folder yang benar dan data sensitif harus diamankan sebelum online.",
+      lessonStart: 0,
+      lessonEnd: 4
+    },
+    {
+      id: "domain-database",
+      icon: "bi-database-gear",
+      label: "Materi 06-10",
+      title: "Setup Domain dan Database",
+      description: "Latih membuat domain/subdomain, database, user, privilege, export SQL, dan upload ZIP ke document root.",
+      outcome: "Kamu bisa menyiapkan alamat, folder, file project, database, dan user dengan urutan yang benar.",
+      lessonStart: 5,
+      lessonEnd: 9
+    },
+    {
+      id: "config-live",
+      icon: "bi-sliders",
+      label: "Materi 11-15",
+      title: "Konfigurasi Project Live",
+      description: "Sambungkan koneksi PHP, .env Laravel, import SQL, permission storage, dan testing fitur utama.",
+      outcome: "Kamu bisa membaca nilai konfigurasi penting dan mengecek apakah fitur benar-benar berjalan di hosting.",
+      lessonStart: 10,
+      lessonEnd: 14
+    },
+    {
+      id: "debug-handover",
+      icon: "bi-shield-check",
+      label: "Materi 16-20",
+      title: "Debug, Backup, dan Handover",
+      description: "Pelajari debug database, 404/500, backup, rollback, keamanan hosting, dan dokumentasi serah terima.",
+      outcome: "Kamu siap menangani masalah umum deploy dan menyerahkan project dengan catatan yang profesional.",
+      lessonStart: 15,
+      lessonEnd: 19
+    }
+  ];
+
+  const starterFlow = [
+    {
+      icon: "bi-clipboard-check",
+      title: "Audit project lokal",
+      description: "Cek file, database, versi PHP, folder penting, dan rahasia sebelum project dipindahkan ke hosting."
+    },
+    {
+      icon: "bi-globe2",
+      title: "Siapkan alamat dan folder",
+      description: "Domain atau subdomain harus mengarah ke document root yang benar sebelum file project diupload."
+    },
+    {
+      icon: "bi-database-check",
+      title: "Pindahkan file dan database",
+      description: "Upload ZIP, extract, buat database, import SQL, dan samakan konfigurasi koneksi hosting."
+    },
+    {
+      icon: "bi-shield-check",
+      title: "Test, backup, dan dokumentasi",
+      description: "Uji fitur utama, baca error log, backup sebelum update, lalu tulis catatan handover yang aman."
+    }
+  ];
+
+  const homeDemos = [
+    {
+      id: "audit",
+      label: "Audit",
+      title: "Audit mencegah error sebelum upload",
+      filename: "deploy-checklist",
+      code: `Checklist audit:
+- project berjalan di lokal
+- file SQL terbaru tersedia
+- versi PHP hosting cocok
+- .env tidak dipublish ke repo publik
+- folder upload dan cache tidak membawa data lama`,
+      output: "Status: project siap diupload\nCatatan: password asli disimpan di tempat aman, bukan di README publik.",
+      explanation: "Audit membuat deploy lebih terarah karena kamu tahu file, database, dan konfigurasi apa yang harus dibawa.",
+      task: "Ambil satu project latihan, lalu tandai file mana yang boleh masuk folder publik dan mana yang harus diamankan."
+    },
+    {
+      id: "domain",
+      label: "Domain",
+      title: "Domain harus menuju folder yang benar",
+      filename: "document-root",
+      code: `Domain live:
+data-wilayah.domain-kamu.co.id
+
+Document root:
+/home/user/data-wilayah.domain-kamu.co.id
+
+File utama:
+index.php atau public/index.php`,
+      output: "Browser membuka domain -> server membaca document root -> index.php tampil.",
+      explanation: "Jika domain membuka folder yang salah, website bisa menampilkan project lain, halaman default, 403, atau 404.",
+      task: "Tulis contoh domain latihan dan folder document root yang akan kamu pakai."
+    },
+    {
+      id: "database",
+      label: "Database",
+      title: "Database hosting butuh user dan privilege",
+      filename: ".env",
+      code: `DB_HOST=localhost
+DB_DATABASE=prefix_wilayah
+DB_USERNAME=prefix_wilayah_user
+DB_PASSWORD=password_database_kamu`,
+      output: "Koneksi valid jika database ada, user benar, password cocok, dan privilege sudah diberikan.",
+      explanation: "Database saja belum cukup. Aplikasi juga butuh user, password, host, dan izin akses ke database tersebut.",
+      task: "Bandingkan nama database lokal dengan nama final hosting yang memakai prefix akun."
+    },
+    {
+      id: "rollback",
+      label: "Rollback",
+      title: "Backup memberi jalan pulang saat update gagal",
+      filename: "rollback-plan",
+      code: `Sebelum update live:
+1. Export database
+2. Download file project stabil
+3. Catat versi dan waktu backup
+4. Upload versi baru
+5. Jika gagal, restore file dan database`,
+      output: "Update gagal -> file stabil dikembalikan -> database direstore -> website normal lagi.",
+      explanation: "Deploy profesional bukan hanya bisa upload, tetapi juga punya rencana pemulihan saat perubahan bermasalah.",
+      task: "Tulis nama file backup dengan tanggal agar tidak tertukar dengan backup lama."
+    }
+  ];
+
   const editorDefaults = {
     checklist: `Checklist deploy cPanel:
 1. Login ke cPanel dari client area hosting atau alamat server hostingmu
@@ -1198,6 +1327,9 @@ if (!$conn) {
     debugChallenges,
     projects,
     badges,
+    learningPhases,
+    starterFlow,
+    homeDemos,
     editorDefaults
   };
 })();
