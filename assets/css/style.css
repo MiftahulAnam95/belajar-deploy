@@ -854,6 +854,8 @@ li {
 .editor-shell,
 .preview-shell,
 .editor-console-shell,
+.debug-editor-wrap,
+.debug-preview-shell,
 .lesson-detail-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1608,14 +1610,60 @@ textarea {
 
 .debug-code-input {
   background: #111827;
-  border: 1px solid #283348;
-  border-radius: 15px;
+  border: 0;
   color: #dbeafe;
+  display: block;
+  font-family: "JetBrains Mono", Consolas, monospace;
   font-size: 0.78rem;
-  margin: 0.8rem 0;
+  min-height: 250px;
+  outline: 0;
   overflow: auto;
   padding: 1rem;
+  resize: vertical;
   white-space: pre-wrap;
+  width: 100%;
+}
+
+.debug-editor-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.85fr);
+  margin-top: 0.9rem;
+}
+
+.debug-editor-wrap,
+.debug-preview-shell {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.debug-editor-wrap .editor-title {
+  border-bottom: 1px solid var(--line);
+}
+
+.debug-editor-wrap .editor-title:not(:first-child) {
+  border-top: 1px solid var(--line);
+}
+
+.debug-analysis-input {
+  background: var(--surface);
+  border: 0;
+  color: var(--text);
+  display: block;
+  font-size: 0.84rem;
+  min-height: 135px;
+  outline: 0;
+  padding: 1rem;
+  resize: vertical;
+  width: 100%;
+}
+
+.debug-preview-frame {
+  background: #fff;
+  border: 0;
+  display: block;
+  min-height: 430px;
+  width: 100%;
 }
 
 .solution-box {
@@ -1941,6 +1989,23 @@ textarea {
   text-transform: uppercase;
 }
 
+.editor-debug-badge {
+  background: var(--primary-soft);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--line));
+  border-radius: 999px;
+  color: var(--primary);
+  display: inline-flex;
+  font-size: 0.64rem;
+  letter-spacing: 0;
+  margin-left: auto;
+  max-width: 60%;
+  overflow: hidden;
+  padding: 0.15rem 0.45rem;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
 .code-input {
   background: #111827;
   border: 0;
@@ -2153,6 +2218,7 @@ body.dark-mode .mini-window {
 
   .challenge-layout,
   .editor-grid,
+  .debug-editor-grid,
   .home-hero-grid,
   .demo-workbench,
   .roadmap-guide,

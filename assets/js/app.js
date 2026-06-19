@@ -32,6 +32,52 @@
     const state = progress.getState();
     return data.lessons.find((lesson) => !state.completedLessons.includes(lesson.id));
   };
+  const recallStorageKey = "deploy-project-lab-recall-answers-v1";
+  const debugAttemptStorageKey = "deploy-project-lab-debug-attempts-v1";
+
+  const loadStoredMap = (key) => {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || "{}");
+      return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+    } catch (error) {
+      return {};
+    }
+  };
+
+  const saveStoredMap = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  const getRecallAnswer = (id) => loadStoredMap(recallStorageKey)[id] || "";
+
+  const saveRecallAnswer = (id, answer) => {
+    const answers = loadStoredMap(recallStorageKey);
+    if (answer.trim()) {
+      answers[id] = answer;
+    } else {
+      delete answers[id];
+    }
+    saveStoredMap(recallStorageKey, answers);
+  };
+
+  const getDebugAttempt = (id, fallbackCode = "") => {
+    const attempt = loadStoredMap(debugAttemptStorageKey)[id] || {};
+    return {
+      analysis: "",
+      code: fallbackCode,
+      ...attempt
+    };
+  };
+
+  const saveDebugAttempt = (id, attempt) => {
+    const attempts = loadStoredMap(debugAttemptStorageKey);
+    attempts[id] = {
+      ...(attempts[id] || {}),
+      ...attempt,
+      updatedAt: new Date().toISOString()
+    };
+    saveStoredMap(debugAttemptStorageKey, attempts);
+  };
 
   const codeBlock = (code, filename = "deploy-checklist") => `
     <div class="code-card">
@@ -512,6 +558,7 @@
     const render = (id = active) => {
       const state = progress.getState();
       const item = data.debugChallenges.find((debug) => debug.id === id) || data.debugChallenges[0];
+      const attempt = getDebugAttempt(item.id, item.code);
       renderChallengeList(data.debugChallenges, state.completedDebug, item.id, "debugList", "bi-bug");
       const target = document.getElementById("debugDetail");
       target.innerHTML = `
@@ -522,28 +569,83 @@
         </div>
         <div class="challenge-body">
           <p><strong>${escapeHtml(item.question)}</strong></p>
-          <pre class="debug-code-input">${escapeHtml(item.code)}</pre>
-          <div class="lesson-actions">
+          <div class="debug-editor-grid">
+            <div class="debug-editor-wrap">
+              <label class="editor-title" for="debugCode"><i class="bi bi-code-square"></i> editor kode perbaikan</label>
+              <textarea class="debug-code-input" id="debugCode" spellcheck="false">${escapeHtml(attempt.code)}</textarea>
+              <label class="editor-title" for="debugAnalysis"><i class="bi bi-card-checklist"></i> catatan analisis</label>
+              <textarea class="debug-analysis-input" id="debugAnalysis" placeholder="Tulis penyebab error dan langkah perbaikanmu.">${escapeHtml(attempt.analysis || "")}</textarea>
+            </div>
+            <div class="debug-preview-shell">
+              <div class="preview-head">
+                <span><i class="bi bi-eye"></i> Preview draft</span>
+                <strong>local</strong>
+              </div>
+              <iframe id="debugPreviewFrame" class="debug-preview-frame" title="Preview draft debugging" loading="lazy"></iframe>
+            </div>
+          </div>
+          <div class="lesson-actions mt-3">
             <button class="btn btn-soft" type="button" id="showHint"><i class="bi bi-lightbulb"></i> Lihat hint</button>
-            <button class="btn btn-primary" type="button" id="showSolution"><i class="bi bi-check2-circle"></i> Lihat solusi</button>
+            <button class="btn btn-soft" type="button" id="previewDebug"><i class="bi bi-play-fill"></i> Preview</button>
+            <button class="btn btn-soft" type="button" id="resetDebug"><i class="bi bi-arrow-counterclockwise"></i> Reset kode</button>
+            <a class="btn btn-soft" href="editor.html?debug=${encodeURIComponent(item.id)}"><i class="bi bi-terminal"></i> Buka simulator</a>
+            <button class="btn btn-primary" type="button" id="showSolution"><i class="bi bi-check2-circle"></i> Kirim jawaban</button>
             <button class="btn btn-soft" type="button" id="markDebug"><i class="bi bi-check-circle"></i> Tandai paham</button>
           </div>
           <div id="debugOutput"></div>
         </div>
       `;
-      document.querySelectorAll("#debugList [data-challenge-id]").forEach((button) => button.addEventListener("click", () => render(button.dataset.challengeId)));
+      const codeInput = document.getElementById("debugCode");
+      const analysisInput = document.getElementById("debugAnalysis");
+      const previewFrame = document.getElementById("debugPreviewFrame");
+      const bindDebugList = () => {
+        document.querySelectorAll("#debugList [data-challenge-id]").forEach((button) => button.addEventListener("click", () => render(button.dataset.challengeId)));
+      };
+      const saveCurrent = () => {
+        saveDebugAttempt(item.id, {
+          analysis: analysisInput.value,
+          code: codeInput.value
+        });
+      };
+      const renderPreview = () => {
+        saveCurrent();
+        previewFrame.srcdoc = buildPreviewDocument("Draft perbaikan deploy", codeInput.value);
+      };
+
+      bindDebugList();
+      codeInput.addEventListener("input", renderPreview);
+      analysisInput.addEventListener("input", saveCurrent);
+      renderPreview();
       document.getElementById("showHint").addEventListener("click", () => {
+        saveCurrent();
         document.getElementById("debugOutput").innerHTML = `<div class="feedback-box"><strong>Hint:</strong> ${escapeHtml(item.hint)}</div>`;
       });
+      document.getElementById("previewDebug").addEventListener("click", () => {
+        renderPreview();
+        toast("Draft debugging disimpan.");
+      });
+      document.getElementById("resetDebug").addEventListener("click", () => {
+        codeInput.value = item.code;
+        renderPreview();
+        toast("Kode debugging dikembalikan ke versi awal.");
+      });
       document.getElementById("showSolution").addEventListener("click", () => {
+        saveCurrent();
+        const wasDone = progress.getState().completedDebug.includes(item.id);
+        progress.markDebug(item.id);
         document.getElementById("debugOutput").innerHTML = `
           <div class="solution-box">
             <strong>Alur membaca error:</strong>
             <ol>${item.explanation.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+            <p><strong>Draft jawabanmu tersimpan di browser ini.</strong></p>
             ${codeBlock(item.solution, "solusi")}
           </div>`;
+        renderChallengeList(data.debugChallenges, progress.getState().completedDebug, item.id, "debugList", "bi-bug");
+        bindDebugList();
+        toast(wasDone ? "Jawaban debugging diperbarui." : "Jawaban debugging tersimpan.");
       });
       document.getElementById("markDebug").addEventListener("click", () => {
+        saveCurrent();
         progress.markDebug(item.id);
         toast("Debugging ditandai paham.");
         render(item.id);
@@ -557,6 +659,7 @@
     const render = (id = active) => {
       const state = progress.getState();
       const item = data.recallChallenges.find((recall) => recall.id === id) || data.recallChallenges[0];
+      const savedAnswer = getRecallAnswer(item.id);
       renderChallengeList(data.recallChallenges, state.completedRecall, item.id, "recallList", "bi-arrow-repeat");
       const target = document.getElementById("recallDetail");
       target.innerHTML = `
@@ -566,8 +669,9 @@
           <p class="mb-0">${escapeHtml(item.prompt)}</p>
         </div>
         <div class="challenge-body">
-          <textarea class="code-input" id="recallAnswer" placeholder="Tulis jawabanmu dulu sebelum membuka jawaban." style="min-height: 180px"></textarea>
+          <textarea class="code-input" id="recallAnswer" placeholder="Tulis jawabanmu dulu sebelum membuka jawaban." style="min-height: 180px">${escapeHtml(savedAnswer)}</textarea>
           <div class="lesson-actions mt-3">
+            <button class="btn btn-soft" type="button" id="saveRecall"><i class="bi bi-save"></i> Simpan jawaban</button>
             <button class="btn btn-primary" type="button" id="showRecall"><i class="bi bi-eye"></i> Buka jawaban</button>
             <button class="btn btn-soft" type="button" id="markRecall"><i class="bi bi-check-circle"></i> Saya ingat</button>
           </div>
@@ -575,10 +679,19 @@
         </div>
       `;
       document.querySelectorAll("#recallList [data-challenge-id]").forEach((button) => button.addEventListener("click", () => render(button.dataset.challengeId)));
+      const answerInput = document.getElementById("recallAnswer");
+      const saveCurrent = () => saveRecallAnswer(item.id, answerInput.value);
+      answerInput.addEventListener("input", saveCurrent);
+      document.getElementById("saveRecall").addEventListener("click", () => {
+        saveCurrent();
+        toast("Jawaban recall disimpan.");
+      });
       document.getElementById("showRecall").addEventListener("click", () => {
+        saveCurrent();
         document.getElementById("recallOutput").innerHTML = `<div class="solution-box"><strong>Jawaban acuan:</strong><p class="mb-0">${escapeHtml(item.answer)}</p></div>`;
       });
       document.getElementById("markRecall").addEventListener("click", () => {
+        saveCurrent();
         progress.markRecall(item.id);
         toast("Recall tersimpan.");
         render(item.id);

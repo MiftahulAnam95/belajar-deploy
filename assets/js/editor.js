@@ -1,6 +1,7 @@
 (() => {
   const data = window.DeployLabData;
   const storageKey = "deploy-project-lab-editor-v1";
+  const debugAttemptStorageKey = "deploy-project-lab-debug-attempts-v1";
 
   const escapeHtml = (value = "") =>
     String(value)
@@ -10,21 +11,52 @@
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
 
-  const loadState = () => {
+  const loadStoredMap = (key) => {
     try {
-      return { ...data.editorDefaults, ...JSON.parse(localStorage.getItem(storageKey) || "{}") };
+      const value = JSON.parse(localStorage.getItem(key) || "{}");
+      return value && typeof value === "object" && !Array.isArray(value) ? value : {};
     } catch (error) {
-      return { ...data.editorDefaults };
+      return {};
     }
   };
 
+  const getActiveDebugChallenge = () => {
+    const debugId = new URLSearchParams(window.location.search).get("debug");
+    return data.debugChallenges.find((challenge) => challenge.id === debugId);
+  };
+
+  const saveDebugDraft = (challenge, code) => {
+    if (!challenge) return;
+    const attempts = loadStoredMap(debugAttemptStorageKey);
+    attempts[challenge.id] = {
+      ...(attempts[challenge.id] || {}),
+      code,
+      updatedAt: new Date().toISOString()
+    };
+    localStorage.setItem(debugAttemptStorageKey, JSON.stringify(attempts));
+  };
+
+  const loadState = () => {
+    const activeDebug = getActiveDebugChallenge();
+    const base = { ...data.editorDefaults, ...loadStoredMap(storageKey) };
+    if (!activeDebug) return base;
+
+    const attempt = loadStoredMap(debugAttemptStorageKey)[activeDebug.id] || {};
+    return {
+      ...base,
+      checklist: attempt.code || activeDebug.code
+    };
+  };
+
   const saveState = () => {
+    const activeDebug = getActiveDebugChallenge();
     const state = {
       checklist: document.getElementById("checklistInput").value,
       connection: document.getElementById("connectionInput").value,
       database: document.getElementById("databaseInput").value
     };
     localStorage.setItem(storageKey, JSON.stringify(state));
+    saveDebugDraft(activeDebug, state.checklist);
   };
 
   const notesToHtml = (text) => {
@@ -140,12 +172,16 @@
 
   const reset = () => {
     localStorage.removeItem(storageKey);
-    const state = { ...data.editorDefaults };
+    const activeDebug = getActiveDebugChallenge();
+    const state = {
+      ...data.editorDefaults,
+      checklist: activeDebug ? activeDebug.code : data.editorDefaults.checklist
+    };
     document.getElementById("checklistInput").value = state.checklist;
     document.getElementById("connectionInput").value = state.connection;
     document.getElementById("databaseInput").value = state.database;
     renderPreview();
-    window.DeployLabLayout?.showToast("Simulator direset.");
+    window.DeployLabLayout?.showToast(activeDebug ? "Draft debugging direset." : "Simulator direset.");
   };
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -154,6 +190,10 @@
     document.getElementById("checklistInput").value = state.checklist;
     document.getElementById("connectionInput").value = state.connection;
     document.getElementById("databaseInput").value = state.database;
+    const activeDebug = getActiveDebugChallenge();
+    if (activeDebug) {
+      document.querySelector(".editor-title")?.insertAdjacentHTML("beforeend", ` <span class="editor-debug-badge">debug: ${escapeHtml(activeDebug.title)}</span>`);
+    }
 
     bindTabs();
     document.getElementById("runEditor").addEventListener("click", () => {
